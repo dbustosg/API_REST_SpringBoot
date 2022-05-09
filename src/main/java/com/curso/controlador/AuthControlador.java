@@ -21,6 +21,8 @@ import com.curso.entidades.Rol;
 import com.curso.entidades.Usuario;
 import com.curso.repositorio.IRolRepositorio;
 import com.curso.repositorio.IUsuarioRepositorio;
+import com.curso.seguridad.JWTAuthResponseDTO;
+import com.curso.seguridad.JwtTokenProvider;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -38,14 +40,20 @@ public class AuthControlador {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+	
 	@PostMapping("/iniciarSesion")
-	public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<JWTAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginDTO.getUsernameOrEmail(), loginDTO.getPassword()));
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		return new ResponseEntity<>("Ha iniciado sesión con éxito", HttpStatus.OK);
+		//Obtenemos el token del jwtTokenProvider
+		String token = jwtTokenProvider.generarToken(authentication);
+		
+		return ResponseEntity.ok(new JWTAuthResponseDTO(token));
 	}
 	
 	@PostMapping("/registrar")
