@@ -1,5 +1,7 @@
 package com.curso.controlador;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +43,13 @@ public class PublicacionControlador {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PublicacionDTO> guardarPublicacion(@RequestBody PublicacionDTO publicacionDTO){
+	public ResponseEntity<PublicacionDTO> guardarPublicacion(@Valid @RequestBody PublicacionDTO publicacionDTO){ //Con la notacion @Valid quiere decirle que valide los datos antes de insertarlos/actualizarlos
 		return new ResponseEntity<>(publicacionServicio.crearPublicacionDTO(publicacionDTO),HttpStatus.CREATED);
 	} 
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<PublicacionDTO> actualizarPublicacion
-			(@RequestBody PublicacionDTO publicacionDTO,
+			(@Valid @RequestBody PublicacionDTO publicacionDTO,
 			@PathVariable(name = "id") long id){
 		PublicacionDTO publicacionRespuesta = publicacionServicio.actualizaPublicacion(publicacionDTO, id);
 		return new ResponseEntity<PublicacionDTO>(publicacionRespuesta, HttpStatus.OK);

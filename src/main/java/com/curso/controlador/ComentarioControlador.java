@@ -2,6 +2,8 @@ package com.curso.controlador;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,7 @@ public class ComentarioControlador {
 	@PostMapping("/publicaciones/{publicacionId}/comentarios")
 	public ResponseEntity<ComentarioDTO> guardarComentario(
 			@PathVariable(value = "publicacionId") long publicacionId,
-			@RequestBody ComentarioDTO comentarioDTO) {
+			@Valid @RequestBody ComentarioDTO comentarioDTO) {
 		return new ResponseEntity<>(comentarioServicio.creaComentario(publicacionId, comentarioDTO),
 				HttpStatus.CREATED);
 	}
@@ -51,7 +53,7 @@ public class ComentarioControlador {
 	public ResponseEntity<ComentarioDTO> actualizarComentario(
 			@PathVariable(value = "publicacionId") long publicacionId,
 			@PathVariable(value = "comentarioId") long comentarioId,
-			@RequestBody ComentarioDTO comentarioDTO){
+			@Valid @RequestBody ComentarioDTO comentarioDTO){
 		
 		ComentarioDTO comentarioActualizado = comentarioServicio.actualizarComentario(publicacionId, comentarioId, comentarioDTO);
 		
